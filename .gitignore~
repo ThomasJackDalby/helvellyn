@@ -1,0 +1,11 @@
+# ignore all build folders
+Helvellyn/bin/*
+Helvellyn/obj/*
+Scallop/bin/*
+Scallop/obj/*
+Sloth/bin/*
+Sloth/obj/*
+
+# ignore gvim files
+*.swp
+

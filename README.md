@@ -1,2 +1,2 @@
 # helvellyn
-Take two
+Small application to calculate metrics on your account history
