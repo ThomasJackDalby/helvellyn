@@ -38,7 +38,7 @@ namespace Helvellyn
 
         public static readonly string[] COLUMNS = { COL_DATE, COL_TAG, COL_TYPE, COL_DESCRIPTION, COL_VALUE, COL_BALANCE, COL_ACCOUNT_NAME, COL_ACCOUNT_NUMBER };
         public static readonly string[] COLUMN_TYPES = { TYPE_DATE, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_DOUBLE, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT };
-
+        
         public Transaction()
         {
             Tag = "Unset";
@@ -108,12 +108,12 @@ namespace Helvellyn
             {
                 Transaction transaction = new Transaction();
                 transaction.Date = DateTime.Parse(data[0]);
-                transaction.Type = data[1].Trim('\'');
-                transaction.Description = data[2].Trim('\'');
-                transaction.Value = Double.Parse(data[3]);
-                transaction.Balance = data[4].Trim('\'');
-                transaction.AccountName = data[5].Trim('\'');
-                transaction.AccountNumber = data[6].Trim('\'');
+                transaction.Type = data[2].Trim('\'');
+                transaction.Description = data[3].Trim('\'');
+                transaction.Value = Double.Parse(data[4]);
+                transaction.Balance = data[5].Trim('\'');
+                transaction.AccountName = data[6].Trim('\'');
+                transaction.AccountNumber = data[7].Trim('\'');
                 return transaction;
             }
             catch(Exception e)

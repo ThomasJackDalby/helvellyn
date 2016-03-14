@@ -29,6 +29,10 @@ namespace Sloth
         {
             write(type, ConsoleColor.Gray, Level.INFO, message, inputs);
         }
+        public void Info(string message, ConsoleColor colour, params object[] inputs)
+        {
+            write(type, colour, Level.INFO, message, inputs);
+        }
         public void Debug(string message, params object[] inputs)
         {
             write(type, ConsoleColor.Blue, Level.DEBUG, message, inputs);

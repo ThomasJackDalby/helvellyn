@@ -33,11 +33,11 @@ namespace Helvellyn
         private static void processMenu(string[] args)
         {
             List<Option> options = new List<Option>();
-            options.Add(new Option { Key = "import", Method = a => ImportManager.Import(a) });
-            options.Add(new Option { Key = "export", Method = a => ExportManager.Process(a) });
-            options.Add(new Option { Key = "report", Method = a => ReportManager.Process(a) });
-            options.Add(new Option { Key = "list", Method = a => list(a) });
-            options.Add(new Option { Key = "graph", Method = a => GraphManager.Process(a) });
+            options.Add(new Option("import", a => ImportManager.Import(a), "read in and process csv files containing transaction information"));
+            options.Add(new Option("export", a => ExportManager.Process(a)));
+            options.Add(new Option("report", a => ReportManager.Process(a)));
+            options.Add(new Option("list", a => list(a)));
+            options.Add(new Option("graph", a => GraphManager.Process(a)));
             Menu.Parse(args, options);
         }
 

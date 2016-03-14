@@ -14,6 +14,8 @@ namespace Helvellyn
 
         public static void Import(params string[] args)
         {
+            if (args == null) logger.Warn("Arguments are null..");
+
             if (args.Length < 2) throw new Exception("Not enough arguments");
 
             if (args[0] == "-f") importFile(args[1]);
@@ -22,6 +24,7 @@ namespace Helvellyn
 
         private static void importDirectory(string directory)
         {
+            logger.Info("Loading transactions from {0}", directory);
             DirectoryInfo info = new DirectoryInfo(directory);
             foreach(FileInfo fileInfo in info.GetFiles())
             {
