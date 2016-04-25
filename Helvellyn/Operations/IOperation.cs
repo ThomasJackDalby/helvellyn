@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scallop
+namespace Helvellyn.Operations
 {
-    public class Argument
+    public interface IOperation
     {
+        string Command { get; }
+        void Process(string[] args);
     }
 }

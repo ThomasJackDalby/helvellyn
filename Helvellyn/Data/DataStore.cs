@@ -30,12 +30,34 @@ namespace Helvellyn
             IList<string[]> result = readData(filepath, command);
             return (from trans in result select Transaction.Parse(trans)).ToList();
         }
+        public IList<Tag> GetAllTags()
+        {
+            logger.Debug("Getting all tags.");
+            string command = "SELECT * FROM " + Tag.TABLE_NAME;
+            IList<string[]> result = readData(filepath, command);
+            return (from trans in result select Tag.Parse(trans)).ToList();
+        }
+        public void RecordTransactions(Transaction transaction)
+        {
+            logger.Debug("Recording transaction.");
+            bool isSetup = isDatabaseSetup();
+            if (!isSetup) setupDataBase();
+            recordTransaction(transaction);
+        }
         public void RecordTransactions(IList<Transaction> transactions)
         {
             logger.Debug("Recording transactions.");
             bool isSetup = isDatabaseSetup();
             if (!isSetup) setupDataBase();
             recordTransactions(transactions);
+        }
+        public void RecordTag(Tag tag)
+        {
+            logger.Debug("Recording tag.");
+            bool isSetup = isDatabaseSetup();
+            if (!isSetup) setupDataBase();
+            recordTag(tag);
+            logger.Debug("Recorded tag");
         }
 
 
@@ -48,9 +70,13 @@ namespace Helvellyn
         {
             logger.Debug("Setting up data store.");
             createDatabase(filepath);
-            string[] columns = new string[Transaction.COLUMNS.Length];
-            for (int i = 0; i < columns.Length; i++) columns[i] = String.Format("[{0}] {1}", Transaction.COLUMNS[i], Transaction.COLUMN_TYPES[i]);
-            addTable(filepath, "transactions", columns);
+            string[] transactionColumns = new string[Transaction.COLUMNS.Length];
+            for (int i = 0; i < transactionColumns.Length; i++) transactionColumns[i] = String.Format("[{0}] {1}", Transaction.COLUMNS[i], Transaction.COLUMN_TYPES[i]);
+            addTable(filepath, Transaction.TABLE_NAME, transactionColumns);
+
+            string[] tagColumns = new string[Tag.COLUMNS.Length];
+            for (int i = 0; i < tagColumns.Length; i++) tagColumns[i] = String.Format("[{0}] {1}", Tag.COLUMNS[i], Tag.COLUMN_TYPES[i]);
+            addTable(filepath, Tag.TABLE_NAME, tagColumns);
         }
         private static void recordTransactions(IList<Transaction> transactions)
         {
@@ -67,6 +93,16 @@ namespace Helvellyn
             for(int i=0;i<rawValues.Length;i++) values[i] = rawValues[i].ToString();
 
             insert(filepath, Transaction.TABLE_NAME, Transaction.COLUMNS, values);
+        }
+        private static void recordTag(Tag tag)
+        {
+            logger.Debug("Recording tag.");
+
+            object[] rawValues = tag.getValues(Tag.COLUMNS);
+            string[] values = new string[rawValues.Length];
+            for (int i = 0; i < rawValues.Length; i++) values[i] = rawValues[i].ToString();
+
+            insert(filepath, Tag.TABLE_NAME, Tag.COLUMNS, values);
         }
         private static bool checkUniqueTransaction(Transaction transaction)
         {

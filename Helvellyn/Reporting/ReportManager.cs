@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Helvellyn
 {
@@ -44,7 +45,6 @@ namespace Helvellyn
                 }
             }
         }
-
         private static void average()
         {
             TimeSpan averageSpan = TimeSpan.FromDays(1);
@@ -90,6 +90,30 @@ namespace Helvellyn
             }
 
             
+        }
+
+        private static void processRegex()
+        {
+            IList<Tag> tags = Program.DataStore.GetAllTags();
+            IList<Transaction> transactions = Program.DataStore.GetAllTransactions();
+
+
+
+        }
+
+        private static IList<Transaction> getMatches(IList<Transaction> transactions, string pattern)
+        {
+            Regex regex = new Regex(pattern);
+
+            IList<Transaction> matches = new List<Transaction>();
+            foreach(Transaction transaction in transactions)
+            {
+                Match result = regex.Match(transaction.Description);
+
+                if (result.Success) matches.Add(transaction);
+            }
+
+            return matches;
         }
     }
 }

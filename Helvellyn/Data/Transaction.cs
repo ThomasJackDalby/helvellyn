@@ -52,7 +52,6 @@ namespace Helvellyn
             logger.Debug("Got raw data.");
             return values;
         }
-
         public object getValue(string property)
         {
             logger.Trace("Getting {0}", property);
@@ -98,11 +97,14 @@ namespace Helvellyn
                 default: throw new Exception("Unknown transaction property " + property);
             }
         }
+        public string ToShortString()
+        {
+            return String.Format("[{0:yyyy-MM-dd}] [{3}] {1,8:#.00} : {2}", Date, Value, Description, Tag);
+        }
 
         public static Transaction Parse(string[] data)
         {
-            logger.Debug("Parsing transaction.");
-            logger.Trace(String.Join(", ", data));
+            logger.Trace("Parsing transaction. {0}",String.Join(", ", data));
 
             try
             {
@@ -123,12 +125,6 @@ namespace Helvellyn
                 logger.Trace(e.Message);
                 return null;
             }
-        }
-
-
-        public string ToShortString()
-        {
-            return String.Format("[{0:yyyy-MM-dd}] {1,8:#.00} : {2}", Date, Value, Description);
-        }
+        }    
     }
 }

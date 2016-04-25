@@ -1,10 +1,10 @@
 # ignore all build folders
+bin/Debug/*
+bin/Release/*
 Helvellyn/bin/*
 Helvellyn/obj/*
-Scallop/bin/*
-Scallop/obj/*
-Sloth/bin/*
-Sloth/obj/*
+Helvellyn.Test/bin/*
+Helvellyn.Test/obj/*
 
 # ignore gvim files
 *.swp

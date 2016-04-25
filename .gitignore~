@@ -1,4 +1,6 @@
 # ignore all build folders
+bin/Debug/*
+bin/Release/*
 Helvellyn/bin/*
 Helvellyn/obj/*
 Scallop/bin/*
@@ -8,4 +10,7 @@ Sloth/obj/*
 
 # ignore gvim files
 *.swp
+
+# ignore data base files
+*.mdb
 

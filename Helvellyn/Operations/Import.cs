@@ -1,4 +1,6 @@
-﻿using Sloth;
+﻿using Helvellyn.Operations;
+using Scallop;
+using Sloth;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,18 +10,19 @@ using System.Threading.Tasks;
 
 namespace Helvellyn
 {
-    public static class ImportManager
+    public class Import : IOperation
     {
-        private static Logger logger = Logger.GetLogger(typeof(ImportManager));
+        private static Logger logger = Logger.GetLogger(typeof(Import));
 
-        public static void Import(params string[] args)
+        public string Command { get { return "import"; } }
+
+        public void Process(string[] args)
         {
-            if (args == null) logger.Warn("Arguments are null..");
+            if (args == null) logger.Warn("Import requires at least one argument.");
 
-            if (args.Length < 2) throw new Exception("Not enough arguments");
-
-            if (args[0] == "-f") importFile(args[1]);
-            else if (args[0] == "-d") importDirectory(args[1]);
+            if (args[1] == "-f") importFile(args[2]);
+            else if (args[1] == "-d") importDirectory(args[2]);
+            else throw new Exception("Unknown flag");
         }
 
         private static void importDirectory(string directory)
@@ -32,7 +35,6 @@ namespace Helvellyn
                 importFile(fileInfo.FullName);
             }
         }
-
         private static void importFile(string filename)
         {
             logger.Info("Loading transactions from {0}", filename);
@@ -52,6 +54,7 @@ namespace Helvellyn
                 transactions.Add(Transaction.Parse(columns.ToArray()));
             }
             Program.DataStore.RecordTransactions(transactions.ToList());
+            logger.Info("Found {0} transactions.", transactions.Count);
         }
     }
 }
