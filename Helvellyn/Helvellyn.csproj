@@ -32,12 +32,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot.WindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0-unstable2100\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Sloth, Version=1.0.0.31524, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sloth.1.0.0.31524\lib\net45\Sloth.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +62,7 @@
     <Compile Include="Data\DataManager.cs" />
     <Compile Include="Operations\AddTag.cs" />
     <Compile Include="Operations\Export.cs" />
+    <Compile Include="Operations\Graph.cs" />
     <Compile Include="Operations\List.cs" />
     <Compile Include="Operations\ListTags.cs" />
     <Compile Include="Operations\RemoveTag.cs" />

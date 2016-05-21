@@ -11,8 +11,8 @@ namespace Helvellyn.Operations
     public class ListTags : IOperation
     {
         private Logger logger = Logger.GetLogger(typeof(ListTags));
-        public string FullCommand { get { return "--list-tags"; } }
-        public string ShortCommand { get { return "-lt"; } }
+        public string FullCommand { get { return "list-tags"; } }
+        public string ShortCommand { get { return "lt"; } }
         public string Description { get { return "list all tags in the database"; } }
         public IArgument[] Arguments { get { return arguments; } }
 

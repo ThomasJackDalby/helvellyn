@@ -10,11 +10,20 @@ namespace Helvellyn.Operations
 {
     public class Export : IOperation
     {
-        public string FullCommand { get { return "--export"; } }
-        public string ShortCommand { get { return "-e"; } }
-        public string Description { get { throw new NotImplementedException(); } }
-        public IArgument[] Arguments { get { throw new NotImplementedException(); } }
+        public string FullCommand { get { return "export"; } }
+        public string ShortCommand { get { return "e"; } }
+        public string Description { get { return "export tags to a csv file"; } }
+        public IArgument[] Arguments { get { return arguments; } }
 
+        private IArgument[] arguments;
+
+        public Export()
+        {
+            arguments = new IArgument[]
+            {
+                
+            };
+        }
 
         public void Process()
         {

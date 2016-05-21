@@ -14,8 +14,8 @@ namespace Helvellyn
     {
         private static Logger logger = Logger.GetLogger(typeof(Import));
 
-        public string FullCommand { get { return "--import"; } }
-        public string ShortCommand { get { return "-i"; } }
+        public string FullCommand { get { return "import"; } }
+        public string ShortCommand { get { return "i"; } }
         public string Description { get { return "add a tag into the database"; } }
         public IArgument[] Arguments { get { return arguments; } }
 

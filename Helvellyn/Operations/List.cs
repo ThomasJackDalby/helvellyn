@@ -13,33 +13,33 @@ namespace Helvellyn.Operations
     {
         private static Logger logger = Logger.GetLogger(typeof(List));
 
-        public string FullCommand { get { return "--list"; } }
-        public string ShortCommand { get { return "-l"; } }
+        public string FullCommand { get { return "list"; } }
+        public string ShortCommand { get { return "l"; } }
         public string Description { get { return "add a tag into the database"; } }
         public IArgument[] Arguments { get { return arguments; } }
 
         private IArgument[] arguments;
 
-        public string Tag { get; set; }
-        public string Scope { get; set; }
-        public bool IsMonth { get; set; }
+        private string tag { get; set; }
+        private string scope { get; set; }
+        private bool isMonth { get; set; }
 
         public List()
         {
             arguments = new IArgument[]
             {
-                new Argument<string>("-tag", v => Tag = (string)v),
-                new Argument<string>("-scope", v => Scope = (string)v),
-                new Argument<string>("-month", v => IsMonth = (bool)v),
+                new Argument<string>("-tag", v => tag = (string)v),
+                new Argument<string>("-scope", v => scope = (string)v),
+                new Argument<bool>("-month", v => isMonth = (bool)v),
             };
         }
 
         public void Process()
         {
             IList<Transaction> transactions;
-            if (IsMonth)
+            if (isMonth)
             {
-                string[] date = Scope.Split('-');
+                string[] date = scope.Split('-');
                 DateTime month = DateTime.ParseExact(date[0], "MMM", CultureInfo.CurrentCulture);
                 int year = Int32.Parse(date[1]);
                 DateTime start = new DateTime(year, month.Month, 1);
@@ -50,13 +50,13 @@ namespace Helvellyn.Operations
 
             TagManager.Process(transactions);
 
-            if (Tag == "all")
+            if (tag == "all")
             {
                 Transaction.Display(transactions);
             }
             else
             {
-                IList<Transaction> filtered = (from transaction in transactions where transaction.Tag == Tag select transaction).ToList();
+                IList<Transaction> filtered = (from transaction in transactions where transaction.Tag == tag select transaction).ToList();
                 Transaction.Display(filtered);
             }
         }

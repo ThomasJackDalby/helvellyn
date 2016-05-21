@@ -25,6 +25,7 @@ namespace Helvellyn
             new AddTag(),
             new RemoveTag(),
             new ListTags(),
+            new Graph(),
         };
 
         static Program()
@@ -47,6 +48,7 @@ namespace Helvellyn
 
         private static void processOperation(string[] args)
         {
+            logger.Trace("Processing operation");
             string command = args[0];
 
             IOperation operation = operations.SingleOrDefault(o => o.FullCommand == command);
@@ -70,7 +72,8 @@ namespace Helvellyn
 
         private static Dictionary<IArgument, object> getArguments(IOperation operation, string[] args)
         {
-            Dictionary<IArgument, object> arguments = new Dictionary<Scallop.IArgument, object>();
+            logger.Trace("Getting arguments");
+            Dictionary<IArgument, object> arguments = new Dictionary<IArgument, object>();
 
             for(int index = 1;index<args.Length;index++)
             {
@@ -119,6 +122,7 @@ namespace Helvellyn
             {
                 logger.Info("{0} : {1}", operation.FullCommand, operation.Description);
                 foreach (IArgument argument in operation.Arguments) logger.Info("    {0} : {1}", argument.Key, argument.Description);
+                logger.Info("");
             }
         }
     }

@@ -13,12 +13,21 @@ namespace Helvellyn.Operations
     {
         private static Logger logger = Logger.GetLogger(typeof(Sum));
 
-        public string FullCommand { get { return "-sum"; } }
-        public string ShortCommand { get { return "-s"; } }
+        public string FullCommand { get { return "sum"; } }
+        public string ShortCommand { get { return "s"; } }
         public string Description { get { return "add a tag into the database"; } }
-        public IArgument[] Arguments { get; set; }
+        public IArgument[] Arguments { get { return arguments; } }
 
+        private IArgument[] arguments;
         
+        public Sum()
+        {
+            arguments = new IArgument[]
+            {
+                
+            };
+        }
+
         public void Process()
         { }
 

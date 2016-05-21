@@ -9,11 +9,20 @@ namespace Helvellyn.Operations
 {
     public class AddTag : IOperation
     {
-        public string FullCommand { get { return "--add-tag"; } }
-        public string ShortCommand { get { return "-at"; } }
+        public string FullCommand { get { return "add-tag"; } }
+        public string ShortCommand { get { return "at"; } }
         public string Description { get { return "add a tag into the database"; } }
-        public IArgument[] Arguments { get { throw new NotImplementedException(); } }
+        public IArgument[] Arguments { get { return arguments; } }
 
+        private IArgument[] arguments;
+
+        public AddTag()
+        {
+            arguments = new IArgument[]
+            {
+
+            };
+        }
 
         public void Process()
         {

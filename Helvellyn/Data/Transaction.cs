@@ -17,7 +17,7 @@ namespace Helvellyn
         public DateTime Date { get; set; }
         public string Description { get; set; }
         public double Value { get; set; }
-        public string Balance { get; set; }
+        public double Balance { get; set; }
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }
         public string Tag { get; set; }
@@ -76,7 +76,7 @@ namespace Helvellyn
                 case COL_TYPE: return Type;
                 case COL_DESCRIPTION: return Description;
                 case COL_VALUE: return Value.ToString();
-                case COL_BALANCE: return Balance;
+                case COL_BALANCE: return Balance.ToString();
                 case COL_ACCOUNT_NAME: return AccountName;
                 case COL_ACCOUNT_NUMBER: return AccountNumber;
                 default: throw new Exception("Unknown transaction property " + property);
@@ -90,7 +90,7 @@ namespace Helvellyn
                 case COL_TYPE: Type = value.ToString(); break;
                 case COL_DESCRIPTION: Description = value; break;
                 case COL_VALUE: Value = Double.Parse(value); break;
-                case COL_BALANCE: Balance = value; break;
+                case COL_BALANCE: Balance = Double.Parse(value); break;
                 case COL_ACCOUNT_NAME: AccountName = value; break;
                 case COL_ACCOUNT_NUMBER: AccountNumber = value; break;
                 default: throw new Exception("Unknown transaction property " + property);
@@ -112,7 +112,7 @@ namespace Helvellyn
                 transaction.Type = data[1].Trim('\'');
                 transaction.Description = data[2].Trim('\'');
                 transaction.Value = Double.Parse(data[3]);
-                transaction.Balance = data[4].Trim('\'');
+                transaction.Balance = Double.Parse(data[4]);
                 transaction.AccountName = data[5].Trim('\'');
                 transaction.AccountNumber = data[6].Trim('\'');
                 return transaction;
