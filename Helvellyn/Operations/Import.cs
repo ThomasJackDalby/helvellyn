@@ -14,20 +14,46 @@ namespace Helvellyn
     {
         private static Logger logger = Logger.GetLogger(typeof(Import));
 
-        public string Command { get { return "import"; } }
+        public string FullCommand { get { return "--import"; } }
+        public string ShortCommand { get { return "-i"; } }
+        public string Description { get { return "add a tag into the database"; } }
+        public IArgument[] Arguments { get { return arguments; } }
 
-        public void Process(string[] args)
+        private string Source { get; set; }
+        private bool IsDirectory { get; set; }
+        private bool IsTags { get; set; }
+
+        private IArgument[] arguments;
+
+        public Import()
         {
-            if (args == null) logger.Warn("Import requires at least one argument.");
-
-            if (args[1] == "-f") importFile(args[2]);
-            else if (args[1] == "-d") importDirectory(args[2]);
-            else throw new Exception("Unknown flag");
+            arguments = new IArgument[]
+            {
+                new Argument<string>("-source", v => Source = (string)v),
+                new Argument<bool>("-directory", v => IsDirectory = (bool)v),
+                new Argument<bool>("-tags", v => IsTags = (bool)v),
+            };
         }
 
+        public void Process()
+        {
+            if (IsTags) importTags(Source);
+            else if (IsDirectory) importDirectory(Source);
+            else importFile(Source);
+        }
+
+        private static void importTags(string filename)
+        {
+            string[] data = File.ReadAllLines(filename);
+            foreach (string line in data)
+            {
+                string[] tag = line.Split(',');
+                Program.DataStore.RecordTag(new Tag(tag[0], tag[1]));
+            }
+        }
         private static void importDirectory(string directory)
         {
-            logger.Info("Loading transactions from {0}", directory);
+            logger.Info("Loading transactions from directory [{0}]", directory);
             DirectoryInfo info = new DirectoryInfo(directory);
             foreach(FileInfo fileInfo in info.GetFiles())
             {
@@ -37,7 +63,7 @@ namespace Helvellyn
         }
         private static void importFile(string filename)
         {
-            logger.Info("Loading transactions from {0}", filename);
+            logger.Info("Loading transactions from file [{0}]", filename);
            
             CsvFileReader reader = new CsvFileReader(filename, EmptyLineBehavior.Ignore);
 

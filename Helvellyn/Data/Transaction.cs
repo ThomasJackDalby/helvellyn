@@ -1,4 +1,5 @@
-﻿using Sloth;
+﻿using Scallop;
+using Sloth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,6 @@ namespace Helvellyn
 
         public const string COL_DATE = "_date";
         public const string COL_TYPE = "type";
-        public const string COL_TAG = "tag";
         public const string COL_DESCRIPTION = "description";
         public const string COL_VALUE = "value";
         public const string COL_BALANCE = "balance";
@@ -36,8 +36,8 @@ namespace Helvellyn
         public const string TYPE_DATE = "DATE";
         public const string TYPE_DOUBLE = "DOUBLE";
 
-        public static readonly string[] COLUMNS = { COL_DATE, COL_TAG, COL_TYPE, COL_DESCRIPTION, COL_VALUE, COL_BALANCE, COL_ACCOUNT_NAME, COL_ACCOUNT_NUMBER };
-        public static readonly string[] COLUMN_TYPES = { TYPE_DATE, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_DOUBLE, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT };
+        public static readonly string[] COLUMNS = { COL_DATE, COL_TYPE, COL_DESCRIPTION, COL_VALUE, COL_BALANCE, COL_ACCOUNT_NAME, COL_ACCOUNT_NUMBER };
+        public static readonly string[] COLUMN_TYPES = { TYPE_DATE, TYPE_TEXT, TYPE_TEXT, TYPE_DOUBLE, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT };
         
         public Transaction()
         {
@@ -59,7 +59,6 @@ namespace Helvellyn
             {
                 case COL_DATE: return Date;
                 case COL_TYPE: return Type;
-                case COL_TAG: return Tag;
                 case COL_DESCRIPTION: return Description;
                 case COL_VALUE: return Value;
                 case COL_BALANCE: return Balance;
@@ -110,12 +109,12 @@ namespace Helvellyn
             {
                 Transaction transaction = new Transaction();
                 transaction.Date = DateTime.Parse(data[0]);
-                transaction.Type = data[2].Trim('\'');
-                transaction.Description = data[3].Trim('\'');
-                transaction.Value = Double.Parse(data[4]);
-                transaction.Balance = data[5].Trim('\'');
-                transaction.AccountName = data[6].Trim('\'');
-                transaction.AccountNumber = data[7].Trim('\'');
+                transaction.Type = data[1].Trim('\'');
+                transaction.Description = data[2].Trim('\'');
+                transaction.Value = Double.Parse(data[3]);
+                transaction.Balance = data[4].Trim('\'');
+                transaction.AccountName = data[5].Trim('\'');
+                transaction.AccountNumber = data[6].Trim('\'');
                 return transaction;
             }
             catch(Exception e)
@@ -125,6 +124,13 @@ namespace Helvellyn
                 logger.Trace(e.Message);
                 return null;
             }
-        }    
+        }
+
+        public static void Display(IList<Transaction> transactions)
+        {
+            if (transactions.Count == 0) logger.Warn("No transactions.");
+            ((List<Transaction>)transactions).Sort((a, b) => a.Date.CompareTo(b.Date));
+            foreach (Transaction transaction in transactions) logger.Info(transaction.ToShortString());
+        }
     }
 }

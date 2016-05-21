@@ -2,11 +2,25 @@
 ===============
 
 A simple finacial application to report and graph accounts.
+In this file, square brackets denote an input required by the user.
+
+
+flag is a boolean
 
 
 
 Functions
 ----------------
+
+Import
+~~~~~~~~~~~
+
+Helvellyn can import transactions from a csv file exported from online banking. It can also import tags from a csv file which are then used to catagorise the transactions.
+
+import {type}[-transactions/-tags] {from}[-file/-directory] {source}[]
+
+import {-f} 
+
 
 List
 ~~~~~~~

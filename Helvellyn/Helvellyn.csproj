@@ -32,13 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Scallop, Version=2.0.0.34441, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Scallop.2.0.0.34441\lib\net45\Scallop.dll</HintPath>
-    </Reference>
     <Reference Include="Sloth, Version=1.0.0.31524, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Sloth.1.0.0.31524\lib\net45\Sloth.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,8 +51,10 @@
     <Compile Include="IO\CSVTools.cs" />
     <Compile Include="Data\DataManager.cs" />
     <Compile Include="Operations\AddTag.cs" />
-    <Compile Include="Operations\IOperation.cs" />
+    <Compile Include="Operations\Export.cs" />
+    <Compile Include="Operations\List.cs" />
     <Compile Include="Operations\ListTags.cs" />
+    <Compile Include="Operations\RemoveTag.cs" />
     <Compile Include="Operations\Sum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Reporting\GraphManager.cs" />
@@ -68,6 +66,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Reporting\Tag.cs" />
     <Compile Include="Data\Transaction.cs" />
+    <Compile Include="TagManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -86,6 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\scallop\src\Scallop\Scallop.csproj">
+      <Project>{3dd9740f-884e-4859-91c7-7deaec4b439e}</Project>
+      <Name>Scallop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

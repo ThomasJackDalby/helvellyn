@@ -1,39 +1,70 @@
-﻿using Sloth;
+﻿using Scallop;
+using Sloth;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Helvellyn.Operations
 {
-    public class List
+    public class List : IOperation
     {
         private static Logger logger = Logger.GetLogger(typeof(List));
 
-        public string Command { get { return "list";}}
-        
-        public void Process(string[] args)
+        public string FullCommand { get { return "--list"; } }
+        public string ShortCommand { get { return "-l"; } }
+        public string Description { get { return "add a tag into the database"; } }
+        public IArgument[] Arguments { get { return arguments; } }
+
+        private IArgument[] arguments;
+
+        public string Tag { get; set; }
+        public string Scope { get; set; }
+        public bool IsMonth { get; set; }
+
+        public List()
         {
-            logger.Debug("list function");
-            string tag = args[1];
-            string scope = args[2];
-            string[] parameters = args.Skip(3).ToArray();
+            arguments = new IArgument[]
+            {
+                new Argument<string>("-tag", v => Tag = (string)v),
+                new Argument<string>("-scope", v => Scope = (string)v),
+                new Argument<string>("-month", v => IsMonth = (bool)v),
+            };
+        }
 
-            logger.Debug("Params: {0}", parameters);
+        public void Process()
+        {
             IList<Transaction> transactions;
-            if (scope == "-a" || scope == "--all") transactions = getAll();
-            else if (scope == "-m" || scope == "--month") transactions = getMonth(parameters[0], parameters[1]);
-            else throw new Exception("Not a valid scope.");
+            if (IsMonth)
+            {
+                string[] date = Scope.Split('-');
+                DateTime month = DateTime.ParseExact(date[0], "MMM", CultureInfo.CurrentCulture);
+                int year = Int32.Parse(date[1]);
+                DateTime start = new DateTime(year, month.Month, 1);
+                DateTime end = start.AddMonths(1).Subtract(TimeSpan.FromDays(1));
+                transactions = Program.DataStore.GetTransactionsBetween(start, end);
+            }
+            else transactions = getAll();
 
-            updateTags(transactions);
-            displayTransactions(transactions);
+            TagManager.Process(transactions);
+
+            if (Tag == "all")
+            {
+                Transaction.Display(transactions);
+            }
+            else
+            {
+                IList<Transaction> filtered = (from transaction in transactions where transaction.Tag == Tag select transaction).ToList();
+                Transaction.Display(filtered);
+            }
         }
 
 
         static IList<Transaction> getAll()
         {
-            IList<Transaction> transactions = DataStore.GetAllTransactions();
+            IList<Transaction> transactions = Program.DataStore.GetAllTransactions();
             return transactions;
         }
         static IList<Transaction> getMonth(string monthString, string yearString)
@@ -44,7 +75,7 @@ namespace Helvellyn.Operations
             DateTime start = new DateTime(year, month.Month, 1);
             DateTime end = start.AddMonths(1).Subtract(TimeSpan.FromDays(1));
             logger.Debug("Getting transactions between {0} and {1}", start, end);
-            IList<Transaction> transactions = DataStore.GetTransactionsBetween(start, end);
+            IList<Transaction> transactions = Program.DataStore.GetTransactionsBetween(start, end);
             return transactions;
         }
         static IList<Transaction> getWeek(string weekString, string yearString)
@@ -54,8 +85,9 @@ namespace Helvellyn.Operations
 
             DateTime start = new DateTime(year, 1, 1).AddDays(7 * week);
             DateTime end = start.AddMonths(1);
-            IList<Transaction> transactions = DataStore.GetTransactionsBetween(start, end);
+            IList<Transaction> transactions = Program.DataStore.GetTransactionsBetween(start, end);
             return transactions;
         }
+
     }
 }

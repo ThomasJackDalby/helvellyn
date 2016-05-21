@@ -1,4 +1,5 @@
-﻿using Sloth;
+﻿using Scallop;
+using Sloth;
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
@@ -13,8 +14,16 @@ namespace Helvellyn
     {
         private static Logger logger = Logger.GetLogger(typeof(Logger));
         public const string filepath = "data.mbd";
-
-
+        public IList<Transaction> GetTransactionsMonths(DateTime start, int months)
+        {
+            DateTime end = start.AddMonths(months).Subtract(TimeSpan.FromDays(1));
+            return GetTransactionsBetween(start, end);
+        }
+        public IList<Transaction> GetTransactions(DateTime start, TimeSpan duration)
+        {
+            DateTime end = start.Add(duration);
+            return GetTransactionsBetween(start, end);
+        }
         public IList<Transaction> GetTransactionsBetween(DateTime start, DateTime end)
         {
             logger.Debug("Getting transactions.");
@@ -59,7 +68,14 @@ namespace Helvellyn
             recordTag(tag);
             logger.Debug("Recorded tag");
         }
+        public void RemoveTag(string name)
+        {
+            logger.Debug("Recording tag.");
+            bool isSetup = isDatabaseSetup();
+            if (!isSetup) setupDataBase();
 
+            removeTag(name);
+        }
 
         private static bool isDatabaseSetup()
         {     
@@ -103,6 +119,21 @@ namespace Helvellyn
             for (int i = 0; i < rawValues.Length; i++) values[i] = rawValues[i].ToString();
 
             insert(filepath, Tag.TABLE_NAME, Tag.COLUMNS, values);
+        }
+
+        private static void removeTag(string name)
+        {
+            //StringBuilder command = new StringBuilder();
+            //command.Append("SELECT * FROM " + Tag.TABLE_NAME + " WHERE [" + Tag.COL_NAME + "] = " + name + ";");
+            //IList<string[]> result = readData(filepath, command.ToString());
+            //if (result.Count == 0)
+            //{
+            //    logger.Warn("Tag [{0}] does not exist", name);
+            //    return;
+            //}
+
+            string command = "DELETE FROM " + Tag.TABLE_NAME + " WHERE [" + Tag.COL_NAME + "] = '" + name + "';";
+            executeNonQuery(filepath, command);
         }
         private static bool checkUniqueTransaction(Transaction transaction)
         {

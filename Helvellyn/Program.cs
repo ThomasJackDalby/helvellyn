@@ -14,36 +14,96 @@ namespace Helvellyn
     static class Program
     {
         private static Logger logger = Logger.GetLogger(typeof(Logger));
-        public static IDataStore DataStore { get; set; }
+        public static IDataStore DataStore { get { return dataStore; } }
+
+        private static readonly IDataStore dataStore = DataManager.LoadDataStore();
+        private static readonly IOperation[] operations = 
+        {
+            new Import(),
+            new Export(),
+            new List(),
+            new AddTag(),
+            new RemoveTag(),
+            new ListTags(),
+        };
+
+        static Program()
+        {
+            Logger.MinLevel = Level.DEBUG;
+        }
 
         static void Main(string[] args)
         {
-            Logger.MinLevel = Level.INFO;
-
-            DataStore = DataManager.LoadDataStore();
             try
             {
-                if (args.Length  == 0) displayHelp();
-                string command = args[0];
-
-                IOperation[] operations = 
-                {
-                    new Import(),
-                    new AddTag(),
-                    new ListTags(),
-                };
-
-                IOperation operation = null;
-                for (int i = 0; i < operations.Length; i++) if (operations[i].Command == command) operation = operations[i];
-                if (operation == null) throw new Exception(String.Format("Unknown operation of [{0}]", command));
-                operation.Process(args);
+                if (args.Length == 0) displayHelp();
+                else processOperation(args);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e.Message);
-                Console.ReadLine();
             }
         }
+
+        private static void processOperation(string[] args)
+        {
+            string command = args[0];
+
+            IOperation operation = operations.SingleOrDefault(o => o.FullCommand == command);
+            if (operation == null)
+            {
+                logger.Error("Unknown operation of [{0}]", command);
+                return;
+            }
+
+            try
+            {
+                Dictionary<IArgument, object> arguments = getArguments(operation, args);
+                foreach (IArgument argument in arguments.Keys) argument.Set(arguments[argument]);
+                operation.Process();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+            }
+        }
+
+        private static Dictionary<IArgument, object> getArguments(IOperation operation, string[] args)
+        {
+            Dictionary<IArgument, object> arguments = new Dictionary<Scallop.IArgument, object>();
+
+            for(int index = 1;index<args.Length;index++)
+            {
+                string key = args[index];
+                IArgument argument = operation.GetArgument(key);
+
+                if (argument.ValueType == typeof(bool)) arguments[argument] = true;
+                else
+                {
+                    string value = args[++index];
+                    if (argument.ValueType == typeof(string)) arguments[argument] = value;
+                    else if (argument.ValueType == typeof(double)) arguments[argument] = Double.Parse(value);
+                    else if (argument.ValueType == typeof(int)) arguments[argument] = Int32.Parse(value);
+                    else throw new Exception(String.Format("Argument type of [{0}] not supported", argument.ValueType));
+                }
+            }
+
+            // any requirements not set, should be set to their default value
+            foreach(IArgument argument in operation.Arguments)
+            {
+                if (!arguments.Keys.Contains(argument)) 
+                {
+                    if (argument.Required) throw new Exception(String.Format("Value not provided for [{0}] which is required.", argument));
+                    arguments[argument] = argument.DefaultValue;
+                }
+            }
+
+            foreach (IArgument arg in arguments.Keys) logger.Debug("{0} : {1}", arg.Key, arguments[arg]);
+
+            return arguments;
+        }
+
+
 
         private static void setSetting(params string[] args)
         {
@@ -55,59 +115,11 @@ namespace Helvellyn
         {
             logger.Info("{0} v{1}", Identity.Name, Identity.Version);
 
-            logger.Info("Help!");
-
-            Console.ReadLine();
-        }
-
-        static void list(string[] args)
-        {
-
-        }
-
-        
-
-        static void sumMonth(params string[] args)
-        {
-            logger.Info("Summing month [{0}]", args[0]);
-            IList<Transaction> transactions = getMonth(args[0], args[1]);
-
-            double total = (from transaction in transactions select transaction.Value).Sum();
-            
-            logger.Info("Found {0} transactions", transactions.Count);
-            logger.Info("Total value of {0}", total);
-        }
-        static void sumWeek(params string[] args)
-        {
-            logger.Info("Summing week [{0}] ", args[0]);
-            IList<Transaction> transactions = getWeek(args[0], args[1]);
-
-            double total = (from transaction in transactions select transaction.Value).Sum();
-
-            logger.Info("Found {0} transactions", transactions.Count);
-            logger.Info("Total value of {0}", total);
-        }
-
-        static void updateTags(IList<Transaction> transactions)
-        {
-            IList<Tag> tags = DataStore.GetAllTags();
-            Dictionary<Tag, Regex> regexs = new Dictionary<Tag, Regex>();
-            foreach (Tag tag in tags) regexs[tag] = new Regex(tag.Pattern);
-
-            foreach(Transaction transaction in transactions)
+            foreach(IOperation operation in operations)
             {
-                foreach(Tag tag in tags)
-                {
-                    Match match = regexs[tag].Match(transaction.Description);
-                    if (match.Success) transaction.Tag = tag.Name;
-                }
+                logger.Info("{0} : {1}", operation.FullCommand, operation.Description);
+                foreach (IArgument argument in operation.Arguments) logger.Info("    {0} : {1}", argument.Key, argument.Description);
             }
-        }
-        static void displayTransactions(IList<Transaction> transactions)
-        {
-            if (transactions.Count == 0) logger.Warn("No transactions.");
-            ((List<Transaction>)transactions).Sort((a, b) => a.Date.CompareTo(b.Date));
-            foreach (Transaction transaction in transactions) logger.Info(transaction.ToShortString());
         }
     }
 }

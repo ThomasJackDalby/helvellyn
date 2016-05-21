@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scallop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +9,20 @@ namespace Helvellyn.Operations
 {
     public class AddTag : IOperation
     {
-        public string Command { get { return "addtag"; } }
+        public string FullCommand { get { return "--add-tag"; } }
+        public string ShortCommand { get { return "-at"; } }
+        public string Description { get { return "add a tag into the database"; } }
+        public IArgument[] Arguments { get { throw new NotImplementedException(); } }
 
-        public void Process(string[] args)
+
+        public void Process()
         {
-            if (args.Length < 3) throw new Exception("Need 3 arguments.");
+            //if (args.Length < 3) throw new Exception("Need 3 arguments.");
 
-            string name = args[1];
-            string pattern = args[2];
-            Tag tag = new Tag { Name = name, Pattern = pattern };
-            Program.DataStore.RecordTag(tag);
+            //string name = args[1];
+            //string pattern = args[2];
+            //Tag tag = new Tag(name, pattern);
+            //Program.DataStore.RecordTag(tag);
         }
     }
 }

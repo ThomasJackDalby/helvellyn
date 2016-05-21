@@ -1,4 +1,5 @@
-﻿using Sloth;
+﻿using Scallop;
+using Sloth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,11 @@ namespace Helvellyn
     {
         private static Logger logger = Logger.GetLogger(typeof(Logger));
 
-        public string Name { get; set; }
-        public string Pattern { get; set; }
+        public string Name { get { return name; } }
+        public string Pattern { get { return pattern; } }
 
-
+        public readonly string pattern;
+        public readonly string name;
 
         public const string TABLE_NAME = "TAGS";
         public const string COL_NAME = "name";
@@ -24,6 +26,11 @@ namespace Helvellyn
         public static readonly string[] COLUMNS = { COL_NAME, COL_PATTERN };
         public static readonly string[] COLUMN_TYPES = { TYPE_TEXT, TYPE_TEXT };
 
+        public Tag(string name, string pattern)
+        {
+            this.name = name;
+            this.pattern = pattern;
+        }
 
         public object[] getValues(string[] columns)
         {
@@ -44,7 +51,6 @@ namespace Helvellyn
             }
         }
 
-
         public static Tag Parse(string[] data)
         {
             logger.Debug("Parsing transaction.");
@@ -52,10 +58,7 @@ namespace Helvellyn
 
             try
             {
-                Tag tag = new Tag();
-                tag.Name = data[0].Trim('\'');
-                tag.Pattern = data[1].Trim('\'');
-                return tag;
+                return new Tag(data[0].Trim('\''), data[1].Trim('\''));
             }
             catch (Exception e)
             {

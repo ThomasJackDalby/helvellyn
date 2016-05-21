@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helvellyn", "Helvellyn\Helv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helvellyn.Test", "Helvellyn.Test\Helvellyn.Test.csproj", "{6437173E-7BA6-4994-9014-D4B52EAC947F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scallop", "..\scallop\src\Scallop\Scallop.csproj", "{3DD9740F-884E-4859-91C7-7DEAEC4B439E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6437173E-7BA6-4994-9014-D4B52EAC947F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6437173E-7BA6-4994-9014-D4B52EAC947F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6437173E-7BA6-4994-9014-D4B52EAC947F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD9740F-884E-4859-91C7-7DEAEC4B439E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD9740F-884E-4859-91C7-7DEAEC4B439E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD9740F-884E-4859-91C7-7DEAEC4B439E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD9740F-884E-4859-91C7-7DEAEC4B439E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
